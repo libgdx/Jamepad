@@ -22,4 +22,9 @@ public class Configuration {
      * to use a loader other than {@link com.badlogic.gdx.utils.SharedLibraryLoader}.
      */
     public boolean loadNativeLibrary = true;
+
+    /**
+     * Disable this to return to legacy temporary file loading of database file.
+     */
+    public boolean loadDatabaseInMemory = true;
 }

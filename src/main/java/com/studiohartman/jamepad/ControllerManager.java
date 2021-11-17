@@ -2,6 +2,7 @@ package com.studiohartman.jamepad;
 
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -277,26 +278,63 @@ public class ControllerManager {
      * @throws IllegalStateException if the mappings cannot be applied to SDL
      */
     public void addMappingsFromFile(String path) throws IOException, IllegalStateException {
-        /*
-        Copy the file to a temp folder. SDL can't read files held in .jars, and that's probably how
-        most people would use this library.
-         */
-        Path extractedLoc =  Files.createTempFile(null, null).toAbsolutePath();
         InputStream source = getClass().getResourceAsStream(path);
         if(source==null) source = ClassLoader.getSystemResourceAsStream(path);
         if(source==null) throw new IOException("Cannot open resource from classpath "+path);
 
-        Files.copy(source, extractedLoc, StandardCopyOption.REPLACE_EXISTING);
+        if(configuration.loadDatabaseInMemory) {
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-        if(!nativeAddMappingsFromFile(extractedLoc.toString())) {
-            throw new IllegalStateException("Failed to set SDL controller mappings! Falling back to build in SDL mappings.");
+            int read;
+            byte[] data = new byte[4096];
+
+            while((read = source.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, read);
+            }
+            
+            byte[] b = buffer.toByteArray();
+            if(!nativeAddMappingsFromBuffer(b, b.length)) {
+                throw new IllegalStateException("Failed to set SDL controller mappings! Falling back to build in SDL mappings.");
+            }
         }
-
-        Files.delete(extractedLoc);
+        else {
+            /*
+            Copy the file to a temp folder. SDL can't read files held in .jars, and that's probably how
+            most people would use this library.
+             */
+            Path extractedLoc =  Files.createTempFile(null, null).toAbsolutePath();
+            
+            Files.copy(source, extractedLoc, StandardCopyOption.REPLACE_EXISTING);
+    
+            if(!nativeAddMappingsFromFile(extractedLoc.toString())) {
+                throw new IllegalStateException("Failed to set SDL controller mappings! Falling back to build in SDL mappings.");
+            }
+    
+            Files.delete(extractedLoc);
+        }
     }
+
     private native boolean nativeAddMappingsFromFile(String path); /*
         if(SDL_GameControllerAddMappingsFromFile(path) < 0) {
             printf("NATIVE METHOD: Failed to load mappings from \"%s\"\n", path);
+            printf("               %s\n", SDL_GetError());
+            return JNI_FALSE;
+        }
+
+        return JNI_TRUE;
+    */
+
+    private native boolean nativeAddMappingsFromBuffer(byte[] buffer, int length); /*
+        SDL_RWops *rw = SDL_RWFromMem(buffer, length);
+
+        if(rw == NULL) {
+            printf("NATIVE METHOD: Failed to create SDL_RWFromMem");
+            printf("               %s\n", SDL_GetError());
+            return JNI_FALSE;
+        }
+
+        if(SDL_GameControllerAddMappingsFromRW(rw, 1) < 0) {
+            printf("NATIVE METHOD: Failed to load mappings from SDL_RWFromMem");
             printf("               %s\n", SDL_GetError());
             return JNI_FALSE;
         }
