@@ -26,9 +26,17 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+
+    - run: mkdir -p SDL/build-macosarm64
+    # No --disable-video for macOS https://gitweb.gentoo.org/repo/gentoo.git/commit/?id=c70c727c98b24ad8b44e05285b8785be15062af0
+    - run: ../configure --host=aarch64-apple-darwin CFLAGS="-arch arm64 -fPIC -mmacosx-version-min=10.7" CPPFLAGS="-arch arm64 -fPIC -mmacosx-version-min=10.7" LDFLAGS="-arch arm64 -mmacosx-version-min=10.7" --disable-audio --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi --disable-joystick-mfi
+      working-directory: SDL/build-macosarm64
+    - run: make -j
+      working-directory: SDL/build-macosarm64
+
     - run: mkdir -p SDL/build-macos64
     # No --disable-video for macOS https://gitweb.gentoo.org/repo/gentoo.git/commit/?id=c70c727c98b24ad8b44e05285b8785be15062af0
-    - run: ../configure CFLAGS="-fPIC -mmacosx-version-min=10.7" CPPFLAGS="-fPIC -mmacosx-version-min=10.7" LDFLAGS="-mmacosx-version-min=10.7" --disable-audio --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi --disable-joystick-mfi
+    - run: ../configure CFLAGS="-arch x86_64 -fPIC -mmacosx-version-min=10.7" CPPFLAGS="-arch x86_64 -fPIC -mmacosx-version-min=10.7" LDFLAGS="-arch x86_64 -mmacosx-version-min=10.7" --disable-audio --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi --disable-joystick-mfi
       working-directory: SDL/build-macos64
     - run: make -j
       working-directory: SDL/build-macos64
@@ -47,7 +55,7 @@ jobs:
 
   linux:
     needs: macos
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     env:
       ORG_GRADLE_PROJECT_GITHUB_USERNAME: ""
       ORG_GRADLE_PROJECT_GITHUB_API_TOKEN: ""

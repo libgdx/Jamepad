@@ -5,7 +5,7 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
     dependencies {
-        classpath "com.badlogicgames.gdx:gdx-jnigen-gradle:2.0.0"
+        classpath "com.badlogicgames.gdx:gdx-jnigen-gradle:2.2.0"
     }
 }
 
@@ -57,7 +57,7 @@ java {
 version project.getProperty('version') + (isReleaseBuild() ? "" : "-SNAPSHOT")
 
 dependencies {
-    api "com.badlogicgames.gdx:gdx-jnigen-loader:2.0.0"
+    api "com.badlogicgames.gdx:gdx-jnigen-loader:2.2.0"
 
     testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
@@ -149,7 +149,12 @@ jnigen {
     add(MacOsX, x64) {
         cFlags += getSdl2CFlags('./SDL/build-macos64/')
         cppFlags += getSdl2CFlags('./SDL/build-macos64/')
-        libraries += "/usr/local/lib/libSDL2.a -lm -liconv -Wl,-framework,CoreAudio -Wl,-framework,AudioToolbox -Wl,-framework,ForceFeedback -lobjc -Wl,-framework,CoreVideo -Wl,-framework,Cocoa -Wl,-framework,Carbon -Wl,-framework,IOKit -Wl,-weak_framework,QuartzCore -Wl,-weak_framework,Metal"
+        libraries += file("SDL/build-macos64/build/.libs/libSDL2.a").absolutePath + " -lm -liconv -Wl,-framework,CoreAudio -Wl,-framework,AudioToolbox -Wl,-framework,ForceFeedback -lobjc -Wl,-framework,CoreVideo -Wl,-framework,Cocoa -Wl,-framework,Carbon -Wl,-framework,IOKit -Wl,-weak_framework,QuartzCore -Wl,-weak_framework,Metal"
+    }
+    add(MacOsX, x64, ARM) {
+        cFlags += getSdl2CFlags('./SDL/build-macosarm64/')
+        cppFlags += getSdl2CFlags('./SDL/build-macosarm64/')
+        libraries += file("SDL/build-macosarm64/build/.libs/libSDL2.a").absolutePath + " -lm -liconv -Wl,-framework,CoreAudio -Wl,-framework,AudioToolbox -Wl,-framework,ForceFeedback -lobjc -Wl,-framework,CoreVideo -Wl,-framework,Cocoa -Wl,-framework,Carbon -Wl,-framework,IOKit -Wl,-weak_framework,QuartzCore -Wl,-weak_framework,Metal"
     }
 }
 
