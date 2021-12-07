@@ -127,13 +127,13 @@ jobs:
       working-directory: SDL/build-linuxarm64
 
     - run: mkdir -p SDL/build-windows32
-    - run: ../configure --host=i686-w64-mingw32 --disable-audio --disable-render --disable-power --disable-filesystem
+    - run: ../configure --host=i686-w64-mingw32 --disable-audio --disable-render --disable-power --disable-filesystem --disable-hidapi
       working-directory: SDL/build-windows32
     - run: make -j
       working-directory: SDL/build-windows32
 
     - run: mkdir -p SDL/build-windows64
-    - run: ../configure --host=x86_64-w64-mingw32 --disable-audio --disable-render --disable-power --disable-filesystem
+    - run: ../configure --host=x86_64-w64-mingw32 --disable-audio --disable-render --disable-power --disable-filesystem --disable-hidapi
       working-directory: SDL/build-windows64
     - run: make -j
       working-directory: SDL/build-windows64
