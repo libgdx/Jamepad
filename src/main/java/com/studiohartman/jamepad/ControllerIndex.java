@@ -107,6 +107,19 @@ public final class ControllerIndex {
         return index;
     }
 
+    /**
+     * @return true of controller can vibrate
+     * @throws ControllerUnpluggedException If the controller is not connected
+     */
+    public boolean canVibrate() throws ControllerUnpluggedException {
+        ensureConnected();
+        return nativeCanVibrate(controllerPtr);
+    }
+
+    private native boolean nativeCanVibrate(long controllerPtr); /*
+        SDL_Joystick* joystick = SDL_GameControllerGetJoystick((SDL_GameController*) controllerPtr);
+        return SDL_JoystickHasRumble(joystick);
+    */
 
     private native boolean nativeDoVibration(long controllerPtr, int leftMagnitude, int rightMagnitude, int duration_ms); /*
         SDL_Joystick* joystick = SDL_GameControllerGetJoystick((SDL_GameController*) controllerPtr);
