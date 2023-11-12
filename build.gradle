@@ -10,7 +10,7 @@ buildscript {
 }
 
 apply plugin: "java-library"
-apply plugin: "maven"
+apply plugin: "maven-publish"
 apply plugin: "eclipse"
 apply plugin: "idea"
 
@@ -159,7 +159,7 @@ jnigen {
 }
 
 jar {
-    baseName = "jamepad"
+    archiveBaseName = "jamepad"
     from fileTree("libs").files
 }
 
