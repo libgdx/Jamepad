@@ -94,6 +94,8 @@ jobs:
       run: sudo apt-get -yq install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf binutils-arm-linux-gnueabihf
     - name: Install Linux arm64 compilers/libraries
       run: sudo apt-get -yq install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
+    - name: Install Linux riscv64 compilers/libraries
+      run: sudo apt-get -yq install gcc-riscv64-linux-gnu g++-riscv64-linux-gnu binutils-riscv64-linux-gnu
     - name: Download macOS natives
       uses: actions/download-artifact@v3
       with:
@@ -127,6 +129,12 @@ jobs:
       working-directory: SDL/build-linuxarm64
     - run: make -j
       working-directory: SDL/build-linuxarm64
+
+    - run: mkdir -p SDL/build-linuxriscv64
+    - run: ../configure --host=riscv64-linux-gnu CFLAGS="-fPIC" CPPFLAGS="-fPIC" --disable-audio --disable-video --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi
+      working-directory: SDL/build-linuxriscv64
+    - run: make -j
+      working-directory: SDL/build-linuxriscv64
 
     - run: mkdir -p SDL/build-windows32
     - run: ../configure --host=i686-w64-mingw32 --disable-audio --disable-render --disable-power --disable-filesystem --disable-hidapi
