@@ -70,10 +70,7 @@ jobs:
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2.4.2
 
-    - run: sudo sed -i 's/deb http/deb [arch=amd64,i386] http/' /etc/apt/sources.list
-    - run: sudo grep "ubuntu.com/ubuntu" /etc/apt/sources.list | sudo tee /etc/apt/sources.list.d/ports.list
-    - run: sudo sed -i 's/amd64,i386/armhf,arm64/' /etc/apt/sources.list.d/ports.list
-    - run: sudo sed -i 's#http://.*/ubuntu#http://ports.ubuntu.com/ubuntu-ports#' /etc/apt/sources.list.d/ports.list
+    - run: echo "http://ports.ubuntu.com/ubuntu-ports" | sudo tee -a /etc/apt/apt-mirrors.txt
     - name: Add extra platform architectures
       run: sudo dpkg --add-architecture i386; sudo dpkg --add-architecture armhf; sudo dpkg --add-architecture arm64
     - run: sudo apt-get update || true
