@@ -1,10 +1,6 @@
 name: Compile and deploy snapshot artifacts
 
-on:
-  push:
-    branches:
-      - master
-      - sdl/**
+on: [push, pull_request] # Don't worry, the actual deployment is guarded with an "if" and only done on push to master
 env:
   GRADLE_USER_HOME: .gradle
 
@@ -12,22 +8,18 @@ jobs:
   macos:
     runs-on: macos-11
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: 'recursive'
-    - uses: actions/cache@v3
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
+
     - name: Set up JDK 8
       uses: actions/setup-java@v3
       with:
         distribution: 'zulu'
         java-version: 8
+
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2.4.2
 
     - run: mkdir -p SDL/build-macosarm64
     # No --disable-video for macOS https://gitweb.gentoo.org/repo/gentoo.git/commit/?id=c70c727c98b24ad8b44e05285b8785be15062af0
@@ -62,27 +54,20 @@ jobs:
       ORG_GRADLE_PROJECT_GITHUB_USERNAME: ""
       ORG_GRADLE_PROJECT_GITHUB_API_TOKEN: ""
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: 'recursive'
-    - uses: actions/cache@v3
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
+
     - name: Set up JDK 8
       uses: actions/setup-java@v3
       with:
         distribution: 'zulu'
         java-version: 8
 
-    - run: sudo sed -i 's/deb http/deb [arch=amd64,i386] http/' /etc/apt/sources.list
-    - run: sudo grep "ubuntu.com/ubuntu" /etc/apt/sources.list | sudo tee /etc/apt/sources.list.d/ports.list
-    - run: sudo sed -i 's/amd64,i386/armhf,arm64/' /etc/apt/sources.list.d/ports.list
-    - run: sudo sed -i 's#http://.*/ubuntu#http://ports.ubuntu.com/ubuntu-ports#' /etc/apt/sources.list.d/ports.list
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2.4.2
+
+    - run: echo "http://ports.ubuntu.com/ubuntu-ports" | sudo tee -a /etc/apt/apt-mirrors.txt
     - name: Add extra platform architectures
       run: sudo dpkg --add-architecture i386; sudo dpkg --add-architecture armhf; sudo dpkg --add-architecture arm64
     - run: sudo apt-get update || true
@@ -149,9 +134,13 @@ jobs:
       with:
         name: output-libs
         path: build/libs/
-    - name: Snapshot build deploy
+    - name: Snapshot build
+      run:
+        ./gradlew build
+    - name: Snapshot deploy
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'libgdx'
       env:
         NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
         NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
       run:
-        ./gradlew build publish
+        ./gradlew publish
