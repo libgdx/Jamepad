@@ -1,6 +1,6 @@
 name: Compile and deploy snapshot artifacts
 
-on: [push, pull_request]
+on: [push, pull_request] # Don't worry, the actual deployment is guarded with an "if" and only done on push to master
 env:
   GRADLE_USER_HOME: .gradle
 
