@@ -5,7 +5,7 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
     dependencies {
-        classpath "com.badlogicgames.gdx:gdx-jnigen-gradle:2.4.2-SNAPSHOT"
+        classpath "com.badlogicgames.gdx:gdx-jnigen-gradle:2.5.0"
     }
 }
 
@@ -57,7 +57,7 @@ java {
 version project.getProperty('version') + (isReleaseBuild() ? "" : "-SNAPSHOT")
 
 dependencies {
-    api "com.badlogicgames.gdx:gdx-jnigen-loader:2.4.2-SNAPSHOT"
+    api "com.badlogicgames.gdx:gdx-jnigen-loader:2.5.0"
 
     testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
