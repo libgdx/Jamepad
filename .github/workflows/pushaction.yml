@@ -3,6 +3,9 @@ name: Compile and deploy snapshot artifacts
 on: [push, pull_request] # Don't worry, the actual deployment is guarded with an "if" and only done on push to master
 env:
   GRADLE_USER_HOME: .gradle
+  # Needed in order to use Node 16. Node 20 does not work with glibc 2.17
+  # See https://github.blog/changelog/2024-03-07-github-actions-all-actions-will-run-on-node20-instead-of-node16-by-default/
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
 jobs:
   macos:
