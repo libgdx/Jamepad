@@ -119,32 +119,32 @@ jnigen {
     add(Windows, x32) {
         cFlags += getSdl2CFlags('./SDL/build-windows32/')
         cppFlags += getSdl2CFlags('./SDL/build-windows32/')
-        libraries += getSdl2StaticLibs('./SDL/build-windows32/').replaceAll("[a-zA-Z0-9\\.\\-/]+libSDL2.a", file("SDL/build-windows32/build/.libs/libSDL2.a").absolutePath).replace("-lSDL2main", file("SDL/build-windows32/build/.libs/libSDL2main.a").absolutePath)
+        libraries += getSdl2StaticLibs('./SDL/build-windows32/').replaceAll("[a-zA-Z0-9_\\.\\-/]+libSDL2.a", file("SDL/build-windows32/build/.libs/libSDL2.a").absolutePath).replace("-lSDL2main", file("SDL/build-windows32/build/.libs/libSDL2main.a").absolutePath)
     }
     add(Windows, x64) {
         cFlags += getSdl2CFlags('./SDL/build-windows64/')
         cppFlags += getSdl2CFlags('./SDL/build-windows64/')
-        libraries += getSdl2StaticLibs('./SDL/build-windows64/').replaceAll("[a-zA-Z0-9\\.\\-/]+libSDL2.a", file("SDL/build-windows64/build/.libs/libSDL2.a").absolutePath).replace("-lSDL2main", file("SDL/build-windows64/build/.libs/libSDL2main.a").absolutePath)
+        libraries += getSdl2StaticLibs('./SDL/build-windows64/').replaceAll("[a-zA-Z0-9_\\.\\-/]+libSDL2.a", file("SDL/build-windows64/build/.libs/libSDL2.a").absolutePath).replace("-lSDL2main", file("SDL/build-windows64/build/.libs/libSDL2main.a").absolutePath)
     }
     add(Linux, x32) {
         cFlags += getSdl2CFlags('./SDL/build-linux32/')
         cppFlags += getSdl2CFlags('./SDL/build-linux32/')
-        libraries += getSdl2StaticLibs('./SDL/build-linux32/').replaceAll("[a-zA-Z0-9\\.\\-/]+libSDL2.a", file("SDL/build-linux32/build/.libs/libSDL2.a").absolutePath)
+        libraries += getSdl2StaticLibs('./SDL/build-linux32/').replaceAll("[a-zA-Z0-9_\\.\\-/]+libSDL2.a", file("SDL/build-linux32/build/.libs/libSDL2.a").absolutePath)
     }
     add(Linux, x64) {
         cFlags += getSdl2CFlags('./SDL/build-linux64/')
         cppFlags += getSdl2CFlags('./SDL/build-linux64/')
-        libraries += getSdl2StaticLibs('./SDL/build-linux64/').replaceAll("[a-zA-Z0-9\\.\\-/]+libSDL2.a", file("SDL/build-linux64/build/.libs/libSDL2.a").absolutePath)
+        libraries += getSdl2StaticLibs('./SDL/build-linux64/').replaceAll("[a-zA-Z0-9_\\.\\-/]+libSDL2.a", file("SDL/build-linux64/build/.libs/libSDL2.a").absolutePath)
     }
     add(Linux, x32, ARM) {
         cFlags += getSdl2CFlags('./SDL/build-linuxarm32/')
         cppFlags += getSdl2CFlags('./SDL/build-linuxarm32/')
-        libraries += getSdl2StaticLibs('./SDL/build-linuxarm32/').replaceAll("[a-zA-Z0-9\\.\\-/]+libSDL2.a", file("SDL/build-linuxarm32/build/.libs/libSDL2.a").absolutePath)
+        libraries += getSdl2StaticLibs('./SDL/build-linuxarm32/').replaceAll("[a-zA-Z0-9_\\.\\-/]+libSDL2.a", file("SDL/build-linuxarm32/build/.libs/libSDL2.a").absolutePath)
     }
     add(Linux, x64, ARM) {
         cFlags += getSdl2CFlags('./SDL/build-linuxarm64/')
         cppFlags += getSdl2CFlags('./SDL/build-linuxarm64/')
-        libraries += getSdl2StaticLibs('./SDL/build-linuxarm64/').replaceAll("[a-zA-Z0-9\\.\\-/]+libSDL2.a", file("SDL/build-linuxarm64/build/.libs/libSDL2.a").absolutePath)
+        libraries += getSdl2StaticLibs('./SDL/build-linuxarm64/').replaceAll("[a-zA-Z0-9_\\.\\-/]+libSDL2.a", file("SDL/build-linuxarm64/build/.libs/libSDL2.a").absolutePath)
     }
     add(MacOsX, x64) {
         cFlags += getSdl2CFlags('./SDL/build-macos64/')
