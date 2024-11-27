@@ -27,6 +27,11 @@ echo "LANG=en_US.UTF-8" >> $GITHUB_ENV
 echo "LANGUAGE=en_US.UTF-8" >> $GITHUB_ENV
 echo "LC_ALL=en_US.UTF-8" >> $GITHUB_ENV
 
+# add zulu apt repository - https://docs.azul.com/core/install/debian
+sudo apt -yq install gnupg ca-certificates curl
+curl -s https://repos.azul.com/azul-repo.key | sudo gpg --dearmor -o /usr/share/keyrings/azul.gpg
+echo "deb [signed-by=/usr/share/keyrings/azul.gpg] https://repos.azul.com/zulu/deb stable main" | sudo tee /etc/apt/sources.list.d/zulu.list
+
 sudo sed -i 's/deb http/deb [arch=amd64,i386] http/' /etc/apt/sources.list
 grep "ubuntu.com/ubuntu" /etc/apt/sources.list | sudo tee /etc/apt/sources.list.d/ports.list
 sudo sed -i 's/amd64,i386/armhf,arm64/' /etc/apt/sources.list.d/ports.list
@@ -34,6 +39,10 @@ sudo sed -i 's#http://.*/ubuntu#http://ports.ubuntu.com/ubuntu-ports#' /etc/apt/
 # Add extra platform architectures
 sudo dpkg --add-architecture i386; sudo dpkg --add-architecture armhf; sudo dpkg --add-architecture arm64
 sudo apt-get update
+
+# install zulu
+sudo apt-get -yq install zulu8-jdk
+
 # Install Windows compilers
 sudo apt-get -yq install g++-mingw-w64-i686 g++-mingw-w64-x86-64
 # Install Linux x86 compilers/libraries
