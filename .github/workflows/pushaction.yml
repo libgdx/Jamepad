@@ -22,7 +22,7 @@ jobs:
         java-version: 8
 
     - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v4
+      uses: gradle/gradle-build-action@v2.4.2
 
     - run: mkdir -p SDL/build-macosarm64
     # No --disable-video for macOS https://gitweb.gentoo.org/repo/gentoo.git/commit/?id=c70c727c98b24ad8b44e05285b8785be15062af0
@@ -86,7 +86,7 @@ jobs:
         java-version: 8
 
     - name: Setup Gradle
-      uses: gradle/setup-gradle@v4
+      uses: gradle/gradle-build-action@v2.4.2
 
     # Snapshot was built inside docker container
     - name: Snapshot deploy
