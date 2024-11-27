@@ -2,12 +2,12 @@
 
 # ubuntu dockerfile is very minimal (only 122 packages are installed)
 # need to install updated git (from official git ppa)
-apt update
-apt install -y software-properties-common
-add-apt-repository ppa:git-core/ppa -y
+sudo apt-get update
+sudo apt-get install -y software-properties-common
+sudo add-apt-repository ppa:git-core/ppa -y
 # install dependencies expected by other steps
-apt update
-apt install -y git \
+sudo apt-get update
+sudo apt-get install -y git \
 curl \
 ca-certificates \
 wget \
@@ -28,7 +28,7 @@ echo "LANGUAGE=en_US.UTF-8" >> $GITHUB_ENV
 echo "LC_ALL=en_US.UTF-8" >> $GITHUB_ENV
 
 # add zulu apt repository - https://docs.azul.com/core/install/debian
-sudo apt -yq install gnupg ca-certificates curl
+sudo apt-get -yq install gnupg ca-certificates curl
 curl -s https://repos.azul.com/azul-repo.key | sudo gpg --dearmor -o /usr/share/keyrings/azul.gpg
 echo "deb [signed-by=/usr/share/keyrings/azul.gpg] https://repos.azul.com/zulu/deb stable main" | sudo tee /etc/apt/sources.list.d/zulu.list
 
