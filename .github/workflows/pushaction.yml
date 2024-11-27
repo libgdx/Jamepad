@@ -71,8 +71,6 @@ jobs:
     - name: Build in Docker Container
       uses: ./.github/actions/docker
       id: docker
-      with:
-        who-to-greet: 'Mona the Octocat'
 
     - name: Upload all output libs
       uses: actions/upload-artifact@v3
