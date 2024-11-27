@@ -76,19 +76,19 @@ cd -
 mkdir -p SDL/build-linuxarm64
 cd SDL/build-linuxarm64
 ../configure --host=aarch64-linux-gnu CFLAGS="-fPIC" CPPFLAGS="-fPIC" --disable-audio --disable-video --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi
-run: make -j
+make -j
 cd -
 
 mkdir -p SDL/build-windows32
 cd SDL/build-windows32
 ../configure --host=i686-w64-mingw32 --disable-audio --disable-render --disable-power --disable-filesystem --disable-hidapi
-run: make -j
+make -j
 cd -
 
 mkdir -p SDL/build-windows64
 cd SDL/build-windows64
-./configure --host=x86_64-w64-mingw32 --disable-audio --disable-render --disable-power --disable-filesystem --disable-hidapi
-run: make -j
+../configure --host=x86_64-w64-mingw32 --disable-audio --disable-render --disable-power --disable-filesystem --disable-hidapi
+make -j
 cd -
 
 chmod +x gradlew
