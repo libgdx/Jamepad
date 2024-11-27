@@ -20,7 +20,8 @@ maven \
 build-essential \
 ant \
 sudo \
-locales
+locales \
+gnupg
 # set Locale to en_US.UTF-8 (avoids hang during compilation)
 locale-gen en_US.UTF-8
 echo "LANG=en_US.UTF-8" >> $GITHUB_ENV
@@ -28,7 +29,6 @@ echo "LANGUAGE=en_US.UTF-8" >> $GITHUB_ENV
 echo "LC_ALL=en_US.UTF-8" >> $GITHUB_ENV
 
 # add zulu apt repository - https://docs.azul.com/core/install/debian
-sudo apt-get -yq install gnupg ca-certificates curl
 curl -s https://repos.azul.com/azul-repo.key | sudo gpg --dearmor -o /usr/share/keyrings/azul.gpg
 echo "deb [signed-by=/usr/share/keyrings/azul.gpg] https://repos.azul.com/zulu/deb stable main" | sudo tee /etc/apt/sources.list.d/zulu.list
 
@@ -41,7 +41,7 @@ sudo dpkg --add-architecture i386; sudo dpkg --add-architecture armhf; sudo dpkg
 sudo apt-get update
 
 # install zulu
-sudo apt-get -yq install zulu8-jdk
+sudo apt-get -yq install zulu8-jdk-headless
 
 # Install Windows compilers
 sudo apt-get -yq install g++-mingw-w64-i686 g++-mingw-w64-x86-64
