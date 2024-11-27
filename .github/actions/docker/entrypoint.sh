@@ -92,4 +92,7 @@ make -j
 cd -
 
 chmod +x gradlew
-./gradlew jnigen jnigenBuild jnigenJarNativesDesktop
+./gradlew jnigen jnigenBuild jnigenJarNativesDesktop --no-daemon
+
+# clean up gradle files after building
+rm -rf ./gradle
