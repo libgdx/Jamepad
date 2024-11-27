@@ -95,4 +95,4 @@ chmod +x gradlew
 ./gradlew jnigen jnigenBuild jnigenJarNativesDesktop --no-daemon
 
 # clean up gradle files after building
-rm -rf ./gradle
+rm -rf .gradle
