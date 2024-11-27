@@ -15,7 +15,7 @@ bzip2 \
 zip \
 unzip \
 xz-utils \
-openjdk-11-jdk-headless \
+#openjdk-11-jdk-headless \
 maven \
 build-essential \
 ant \
