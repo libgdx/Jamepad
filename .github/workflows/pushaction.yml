@@ -67,8 +67,6 @@ jobs:
 #        distribution: 'zulu'
 #        java-version: 8
 #
-#    - name: Setup Gradle
-#      uses: gradle/gradle-build-action@v2.4.2
 
     - name: Download macOS natives
       uses: actions/download-artifact@v3
@@ -87,6 +85,10 @@ jobs:
       with:
         name: output-libs
         path: build/libs/
+
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2.4.2
+
     - name: Snapshot build
       run:
         ./gradlew build
