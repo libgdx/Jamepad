@@ -1,0 +1,16 @@
+# docker.yml
+name: 'Build Linux Natives in Docker'
+description: 'Build Linux Natives in Ubuntu 18.04 docker container'
+inputs:
+  who-to-greet:  # id of input
+    description: 'Who to greet'
+    required: true
+    default: 'World'
+outputs:
+  time: # id of output
+    description: 'The time we greeted you'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.who-to-greet }}
