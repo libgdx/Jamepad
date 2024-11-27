@@ -3,11 +3,11 @@
 # ubuntu dockerfile is very minimal (only 122 packages are installed)
 # need to install updated git (from official git ppa)
 apt-get update
-apt-get install -y software-properties-common
+apt-get install -yq software-properties-common
 add-apt-repository ppa:git-core/ppa -y
 # install dependencies expected by other steps
 apt-get update
-apt-get install -y git \
+apt-get install -yq git \
 curl \
 ca-certificates \
 wget \
@@ -38,7 +38,7 @@ sed -i 's/amd64,i386/armhf,arm64/' /etc/apt/sources.list.d/ports.list
 sed -i 's#http://.*/ubuntu#http://ports.ubuntu.com/ubuntu-ports#' /etc/apt/sources.list.d/ports.list
 # Add extra platform architectures
 dpkg --add-architecture i386; dpkg --add-architecture armhf; dpkg --add-architecture arm64
-apt-get update
+apt-get -q update
 
 # install zulu and java build tools
 apt-get -yq install zulu8-jdk-headless maven ant
