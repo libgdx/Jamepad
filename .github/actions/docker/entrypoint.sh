@@ -15,13 +15,15 @@ bzip2 \
 zip \
 unzip \
 xz-utils \
-#openjdk-11-jdk-headless \
 maven \
 build-essential \
 ant \
 sudo \
 locales \
 gnupg
+#openjdk-11-jdk-headless \
+
+
 # set Locale to en_US.UTF-8 (avoids hang during compilation)
 locale-gen en_US.UTF-8
 echo "LANG=en_US.UTF-8" >> $GITHUB_ENV
@@ -93,6 +95,9 @@ cd - || exit
 
 chmod +x gradlew
 ./gradlew jnigen jnigenBuild jnigenJarNativesDesktop --no-daemon
+
+# Build Snapshot
+./gradlew build --no-daemon
 
 # clean up gradle files after building
 rm -rf .gradle
