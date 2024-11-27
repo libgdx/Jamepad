@@ -56,40 +56,40 @@ find -type f -path "SDL/*.h" -exec sed -i 's/extern DECLSPEC//' {} \;
 sed -i 's/#define SDL_DYNAMIC_API 1/#define SDL_DYNAMIC_API 0/' SDL/src/dynapi/SDL_dynapi.h
 
 mkdir -p SDL/build-linux64
-cd SDL/build-linux64
+cd SDL/build-linux64 || exit
 ../configure CFLAGS="-fPIC" CPPFLAGS="-fPIC" --disable-audio --disable-video --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi
 make -j
-cd -
+cd - || exit
 
 mkdir -p SDL/build-linux32
-cd SDL/build-linux32
+cd SDL/build-linux32 || exit
 ../configure CFLAGS="-fPIC -m32" CPPFLAGS="-fPIC -m32" LDFLAGS="-m32" --disable-audio --disable-video --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi
 make -j
-cd -
+cd - || exit
 
 mkdir -p SDL/build-linuxarm32
-cd SDL/build-linuxarm32
+cd SDL/build-linuxarm32 || exit
 ../configure --host=arm-linux-gnueabihf CFLAGS="-fPIC" CPPFLAGS="-fPIC" --disable-audio --disable-video --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi
 make -j
-cd -
+cd - || exit
 
 mkdir -p SDL/build-linuxarm64
-cd SDL/build-linuxarm64
+cd SDL/build-linuxarm64 || exit
 ../configure --host=aarch64-linux-gnu CFLAGS="-fPIC" CPPFLAGS="-fPIC" --disable-audio --disable-video --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi
 make -j
-cd -
+cd - || exit
 
 mkdir -p SDL/build-windows32
-cd SDL/build-windows32
+cd SDL/build-windows32 || exit
 ../configure --host=i686-w64-mingw32 --disable-audio --disable-render --disable-power --disable-filesystem --disable-hidapi
 make -j
-cd -
+cd - || exit
 
 mkdir -p SDL/build-windows64
-cd SDL/build-windows64
+cd SDL/build-windows64 || exit
 ../configure --host=x86_64-w64-mingw32 --disable-audio --disable-render --disable-power --disable-filesystem --disable-hidapi
 make -j
-cd -
+cd - || exit
 
 chmod +x gradlew
 ./gradlew jnigen jnigenBuild jnigenJarNativesDesktop --no-daemon
