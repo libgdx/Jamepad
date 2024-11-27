@@ -1,4 +1,4 @@
-# docker.yml
+# action.yml
 name: 'Build Linux Natives in Docker'
 description: 'Build Linux Natives in Ubuntu 18.04 docker container'
 inputs:

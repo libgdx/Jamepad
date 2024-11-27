@@ -77,7 +77,7 @@ jobs:
         path: libs
 
     - name: Build in Docker Container
-      uses: ./.github/workflows/docker/docker.yml
+      uses: ./.github/actions/docker
       id: docker
       with:
         who-to-greet: 'Mona the Octocat'
