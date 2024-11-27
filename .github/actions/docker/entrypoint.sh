@@ -15,9 +15,7 @@ bzip2 \
 zip \
 unzip \
 xz-utils \
-maven \
 build-essential \
-ant \
 sudo \
 locales \
 gnupg
@@ -42,8 +40,8 @@ sed -i 's#http://.*/ubuntu#http://ports.ubuntu.com/ubuntu-ports#' /etc/apt/sourc
 dpkg --add-architecture i386; dpkg --add-architecture armhf; dpkg --add-architecture arm64
 apt-get update
 
-# install zulu
-apt-get -yq install zulu8-jdk-headless
+# install zulu and java build tools
+apt-get -yq install zulu8-jdk-headless maven ant
 
 # Install Windows compilers
 apt-get -yq install g++-mingw-w64-i686 g++-mingw-w64-x86-64
@@ -54,7 +52,7 @@ apt-get -yq install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf binutils-arm
 # Install Linux arm64 compilers/libraries
 apt-get -yq install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
 
-find -type f -path "SDL/*.h" -exec sed -i 's/extern DECLSPEC//' {} \;
+find . -type f -path "SDL/*.h" -exec sed -i 's/extern DECLSPEC//' {} \;
 sed -i 's/#define SDL_DYNAMIC_API 1/#define SDL_DYNAMIC_API 0/' SDL/src/dynapi/SDL_dynapi.h
 
 mkdir -p SDL/build-linux64
