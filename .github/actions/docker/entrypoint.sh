@@ -26,9 +26,9 @@ gnupg
 
 # set Locale to en_US.UTF-8 (avoids hang during compilation)
 locale-gen en_US.UTF-8
-echo "LANG=en_US.UTF-8" >> $GITHUB_ENV
-echo "LANGUAGE=en_US.UTF-8" >> $GITHUB_ENV
-echo "LC_ALL=en_US.UTF-8" >> $GITHUB_ENV
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 
 # add zulu apt repository - https://docs.azul.com/core/install/debian
 curl -s https://repos.azul.com/azul-repo.key | gpg --dearmor -o /usr/share/keyrings/azul.gpg
