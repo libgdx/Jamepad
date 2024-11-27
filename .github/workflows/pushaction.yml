@@ -82,50 +82,6 @@ jobs:
       with:
         who-to-greet: 'Mona the Octocat'
 
-    - run: find -type f -name "*.h" -exec sed -i 's/extern DECLSPEC//' {} \;
-      working-directory: SDL
-    - run: sed -i 's/#define SDL_DYNAMIC_API 1/#define SDL_DYNAMIC_API 0/' SDL/src/dynapi/SDL_dynapi.h
-
-    - run: mkdir -p SDL/build-linux64
-    - run: ../configure CFLAGS="-fPIC" CPPFLAGS="-fPIC" --disable-audio --disable-video --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi
-      working-directory: SDL/build-linux64
-    - run: make -j
-      working-directory: SDL/build-linux64
-
-    - run: mkdir -p SDL/build-linux32
-    - run: ../configure CFLAGS="-fPIC -m32" CPPFLAGS="-fPIC -m32" LDFLAGS="-m32" --disable-audio --disable-video --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi
-      working-directory: SDL/build-linux32
-    - run: make -j
-      working-directory: SDL/build-linux32
-
-    - run: mkdir -p SDL/build-linuxarm32
-    - run: ../configure --host=arm-linux-gnueabihf CFLAGS="-fPIC" CPPFLAGS="-fPIC" --disable-audio --disable-video --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi
-      working-directory: SDL/build-linuxarm32
-    - run: make -j
-      working-directory: SDL/build-linuxarm32
-
-    - run: mkdir -p SDL/build-linuxarm64
-    - run: ../configure --host=aarch64-linux-gnu CFLAGS="-fPIC" CPPFLAGS="-fPIC" --disable-audio --disable-video --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi
-      working-directory: SDL/build-linuxarm64
-    - run: make -j
-      working-directory: SDL/build-linuxarm64
-
-    - run: mkdir -p SDL/build-windows32
-    - run: ../configure --host=i686-w64-mingw32 --disable-audio --disable-render --disable-power --disable-filesystem --disable-hidapi
-      working-directory: SDL/build-windows32
-    - run: make -j
-      working-directory: SDL/build-windows32
-
-    - run: mkdir -p SDL/build-windows64
-    - run: ../configure --host=x86_64-w64-mingw32 --disable-audio --disable-render --disable-power --disable-filesystem --disable-hidapi
-      working-directory: SDL/build-windows64
-    - run: make -j
-      working-directory: SDL/build-windows64
-
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew jnigen jnigenBuild jnigenJarNativesDesktop
     - name: Upload all output libs
       uses: actions/upload-artifact@v3
       with:
