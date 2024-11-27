@@ -43,3 +43,4 @@ sudo apt-get -yq install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf binutil
 # Install Linux arm64 compilers/libraries
 sudo apt-get -yq install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
 
+ls
