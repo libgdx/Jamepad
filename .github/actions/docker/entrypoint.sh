@@ -32,9 +32,13 @@ export LC_ALL=en_US.UTF-8
 curl -s https://repos.azul.com/azul-repo.key | gpg --dearmor -o /usr/share/keyrings/azul.gpg
 echo "deb [signed-by=/usr/share/keyrings/azul.gpg] https://repos.azul.com/zulu/deb stable main" | tee /etc/apt/sources.list.d/zulu.list
 
+# default Ubuntu jammy archive doesn't support armhf or arm64
+# so remove those architectures in this list to avoid invalid URL errors
 sed -i 's/deb http/deb [arch=amd64,i386] http/' /etc/apt/sources.list
+# make a copy of sources.list that we'll use for armhf and arm64 ports
 grep "ubuntu.com/ubuntu" /etc/apt/sources.list | tee /etc/apt/sources.list.d/ports.list
 sed -i 's/amd64,i386/armhf,arm64/' /etc/apt/sources.list.d/ports.list
+# change URLs in ports.list to use Ubuntu ports repo
 sed -i 's#http://.*/ubuntu#http://ports.ubuntu.com/ubuntu-ports#' /etc/apt/sources.list.d/ports.list
 # Add extra platform architectures
 dpkg --add-architecture i386; dpkg --add-architecture armhf; dpkg --add-architecture arm64
