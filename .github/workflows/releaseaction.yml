@@ -70,7 +70,7 @@ jobs:
         name: macos-natives
         path: libs
 
-    # Build natives and snapshot in docker container
+    # Build natives in docker container
     - name: Build in Docker Container
       uses: ./.github/actions/docker
       id: docker
@@ -102,4 +102,4 @@ jobs:
         NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
         NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
       run:
-        ./gradlew publish -PRELEASE -Psigning.gnupg.keyId=${{ secrets.GPG_KEYID }} -Psigning.gnupg.passphrase=${{ secrets.GPG_PASSPHRASE }} -Psigning.gnupg.keyName=${{ secrets.GPG_KEYID }} --no-daemon
+        ./gradlew build publish -PRELEASE -Psigning.gnupg.keyId=${{ secrets.GPG_KEYID }} -Psigning.gnupg.passphrase=${{ secrets.GPG_PASSPHRASE }} -Psigning.gnupg.keyName=${{ secrets.GPG_KEYID }} --no-daemon

@@ -67,7 +67,7 @@ jobs:
         name: macos-natives
         path: libs
 
-    # Build natives and snapshot in docker container
+    # Build natives in docker container
     - name: Build in Docker Container
       uses: ./.github/actions/docker
       id: docker
@@ -91,10 +91,10 @@ jobs:
       uses: gradle/gradle-build-action@v2.4.2
 
     # Snapshot was built inside docker container
-    - name: Snapshot deploy
+    - name: Snapshot build deploy
       if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'libgdx'
       env:
         NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
         NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
       run:
-        ./gradlew publish --no-daemon
+        ./gradlew build publish --no-daemon
