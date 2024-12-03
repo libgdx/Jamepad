@@ -46,7 +46,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew jnigen jnigenBuild
+      run: ./gradlew jnigen jnigenBuild --no-daemon
     - name: Upload macOS natives
       uses: actions/upload-artifact@v3
       with:
@@ -102,4 +102,5 @@ jobs:
         NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
         NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
       run:
+        # Execute permission was granted in the docker script
         ./gradlew build publish -PRELEASE -Psigning.gnupg.keyId=${{ secrets.GPG_KEYID }} -Psigning.gnupg.passphrase=${{ secrets.GPG_PASSPHRASE }} -Psigning.gnupg.keyName=${{ secrets.GPG_KEYID }} --no-daemon
