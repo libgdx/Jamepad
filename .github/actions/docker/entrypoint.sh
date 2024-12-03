@@ -2,12 +2,12 @@
 
 # ubuntu dockerfile is very minimal (only 122 packages are installed)
 # need to install updated git (from official git ppa)
-apt-get update
-apt-get install -yq software-properties-common
-add-apt-repository ppa:git-core/ppa -y
+apt-get -q update
+apt-get -yq install software-properties-common
+add-apt-repository -y ppa:git-core/ppa
 # install dependencies expected by other steps
-apt-get update
-apt-get install -yq git \
+apt-get -q update
+apt-get -yq install git \
 curl \
 ca-certificates \
 wget \
