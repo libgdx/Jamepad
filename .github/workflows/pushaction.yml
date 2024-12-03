@@ -80,12 +80,14 @@ jobs:
 
 
     - name: Set up JDK 8
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'libgdx'
       uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
         java-version: 8
 
     - name: Setup Gradle
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'libgdx'
       uses: gradle/gradle-build-action@v2.4.2
 
     # Snapshot was built inside docker container
