@@ -95,11 +95,13 @@ cd SDL/build-windows64 || exit
 make -j
 cd - || exit
 
+# Grant execute permission for gradlew
 chmod +x gradlew
+# Build with Gradle
 ./gradlew jnigen jnigenBuild jnigenJarNativesDesktop --no-daemon
 
 # Build Snapshot
 ./gradlew build --no-daemon
 
-# clean up gradle files after building
+# clean up gradle files before handing back to runner
 rm -rf .gradle
