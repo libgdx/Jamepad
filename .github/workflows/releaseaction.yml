@@ -6,9 +6,6 @@ on:
 
 env:
   GRADLE_USER_HOME: .gradle
-  # Needed in order to use Node 16. Node 20 does not work with glibc 2.17
-  # See https://github.blog/changelog/2024-03-07-github-actions-all-actions-will-run-on-node20-instead-of-node16-by-default/
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
 jobs:
   macos:
@@ -46,7 +43,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew jnigen jnigenBuild
+      run: ./gradlew jnigen jnigenBuild --no-daemon
     - name: Upload macOS natives
       uses: actions/upload-artifact@v3
       with:
@@ -56,40 +53,28 @@ jobs:
   linux:
     needs: macos
     runs-on: ubuntu-20.04
-    container: ubuntu:18.04
     env:
       ORG_GRADLE_PROJECT_GITHUB_USERNAME: ""
       ORG_GRADLE_PROJECT_GITHUB_API_TOKEN: ""
     steps:
-    - name: Install dependencies into minimal dockerfile
-      run: |
-        # ubuntu dockerfile is very minimal (only 122 packages are installed)
-        # need to install updated git (from official git ppa)
-        apt update
-        apt install -y software-properties-common
-        add-apt-repository ppa:git-core/ppa -y
-        # install dependencies expected by other steps
-        apt update
-        apt install -y git \
-        curl \
-        ca-certificates \
-        wget \
-        bzip2 \
-        zip \
-        unzip \
-        xz-utils \
-        openjdk-11-jdk-headless \
-        maven \
-        build-essential \
-        ant sudo locales
-        # set Locale to en_US.UTF-8 (avoids hang during compilation)
-        locale-gen en_US.UTF-8
-        echo "LANG=en_US.UTF-8" >> $GITHUB_ENV
-        echo "LANGUAGE=en_US.UTF-8" >> $GITHUB_ENV
-        echo "LC_ALL=en_US.UTF-8" >> $GITHUB_ENV   
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: 'recursive'
+
+    - name: Download macOS natives
+      uses: actions/download-artifact@v3
+      with:
+        name: macos-natives
+        path: libs
+
+    - name: Build natives in Docker Container
+      uses: ./.github/actions/docker
+      id: docker
+    - name: Upload all output libs
+      uses: actions/upload-artifact@v3
+      with:
+        name: output-libs
+        path: build/libs/
 
     - name: Set up JDK 8
       uses: actions/setup-java@v3
@@ -100,76 +85,6 @@ jobs:
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2.4.2
 
-    - run: sudo sed -i 's/deb http/deb [arch=amd64,i386] http/' /etc/apt/sources.list
-    - run: grep "ubuntu.com/ubuntu" /etc/apt/sources.list | sudo tee /etc/apt/sources.list.d/ports.list
-    - run: sudo sed -i 's/amd64,i386/armhf,arm64/' /etc/apt/sources.list.d/ports.list
-    - run: sudo sed -i 's#http://.*/ubuntu#http://ports.ubuntu.com/ubuntu-ports#' /etc/apt/sources.list.d/ports.list
-    - name: Add extra platform architectures
-      run: sudo dpkg --add-architecture i386; sudo dpkg --add-architecture armhf; sudo dpkg --add-architecture arm64
-    - run: sudo apt-get update
-    - name: Install Windows compilers
-      run: sudo apt-get -yq install g++-mingw-w64-i686 g++-mingw-w64-x86-64
-    - name: Install Linux x86 compilers/libraries
-      run: sudo apt-get -yq install gcc-multilib g++-multilib linux-libc-dev:i386
-    - name: Install Linux arm32 compilers/libraries
-      run: sudo apt-get -yq install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf binutils-arm-linux-gnueabihf
-    - name: Install Linux arm64 compilers/libraries
-      run: sudo apt-get -yq install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
-    - name: Download macOS natives
-      uses: actions/download-artifact@v3
-      with:
-        name: macos-natives
-        path: libs
-
-    - run: find -type f -name "*.h" -exec sed -i 's/extern DECLSPEC//' {} \;
-      working-directory: SDL
-    - run: sed -i 's/#define SDL_DYNAMIC_API 1/#define SDL_DYNAMIC_API 0/' SDL/src/dynapi/SDL_dynapi.h
-
-    - run: mkdir -p SDL/build-linux64
-    - run: ../configure CFLAGS="-fPIC" CPPFLAGS="-fPIC" --disable-audio --disable-video --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi
-      working-directory: SDL/build-linux64
-    - run: make -j
-      working-directory: SDL/build-linux64
-
-    - run: mkdir -p SDL/build-linux32
-    - run: ../configure CFLAGS="-fPIC -m32" CPPFLAGS="-fPIC -m32" LDFLAGS="-m32" --disable-audio --disable-video --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi
-      working-directory: SDL/build-linux32
-    - run: make -j
-      working-directory: SDL/build-linux32
-
-    - run: mkdir -p SDL/build-linuxarm32
-    - run: ../configure --host=arm-linux-gnueabihf CFLAGS="-fPIC" CPPFLAGS="-fPIC" --disable-audio --disable-video --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi
-      working-directory: SDL/build-linuxarm32
-    - run: make -j
-      working-directory: SDL/build-linuxarm32
-
-    - run: mkdir -p SDL/build-linuxarm64
-    - run: ../configure --host=aarch64-linux-gnu CFLAGS="-fPIC" CPPFLAGS="-fPIC" --disable-audio --disable-video --disable-video-vulkan --disable-render --disable-filesystem --disable-threads --disable-directx --disable-mmx --disable-3dnow --disable-sse --disable-sse2 --disable-sse3 --disable-cpuinfo --disable-sensor --enable-hidapi
-      working-directory: SDL/build-linuxarm64
-    - run: make -j
-      working-directory: SDL/build-linuxarm64
-
-    - run: mkdir -p SDL/build-windows32
-    - run: ../configure --host=i686-w64-mingw32 --disable-audio --disable-render --disable-power --disable-filesystem --disable-hidapi
-      working-directory: SDL/build-windows32
-    - run: make -j
-      working-directory: SDL/build-windows32
-
-    - run: mkdir -p SDL/build-windows64
-    - run: ../configure --host=x86_64-w64-mingw32 --disable-audio --disable-render --disable-power --disable-filesystem --disable-hidapi
-      working-directory: SDL/build-windows64
-    - run: make -j
-      working-directory: SDL/build-windows64
-
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew jnigen jnigenBuild jnigenJarNativesDesktop
-    - name: Upload all output libs
-      uses: actions/upload-artifact@v3
-      with:
-        name: output-libs
-        path: build/libs/
     - name: Import GPG key
       id: import_gpg
       uses: crazy-max/ghaction-import-gpg@v5
@@ -181,4 +96,5 @@ jobs:
         NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
         NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
       run:
-        ./gradlew build publish -PRELEASE -Psigning.gnupg.keyId=${{ secrets.GPG_KEYID }} -Psigning.gnupg.passphrase=${{ secrets.GPG_PASSPHRASE }} -Psigning.gnupg.keyName=${{ secrets.GPG_KEYID }}
+        # Execute permission was granted in the docker script
+        ./gradlew build publish -PRELEASE -Psigning.gnupg.keyId=${{ secrets.GPG_KEYID }} -Psigning.gnupg.passphrase=${{ secrets.GPG_PASSPHRASE }} -Psigning.gnupg.keyName=${{ secrets.GPG_KEYID }} --no-daemon
