@@ -18,7 +18,7 @@ xz-utils \
 build-essential \
 sudo \
 locales \
-gnupg
+gnupg rename
 #openjdk-11-jdk-headless \
 
 
@@ -99,6 +99,10 @@ cd - || exit
 chmod +x gradlew
 # Build with Gradle
 ./gradlew jnigen jnigenBuild jnigenJarNativesDesktop --no-daemon
+
+# fix built jars being of the form workspace-*.jar instead of Jamepad-*.jar
+# due to the directory being mounted to /github/workspace on the container
+rename 's/workspace/Jamepad' build/libs/*
 
 # clean up gradle files before handing back to runner
 rm -rf .gradle
